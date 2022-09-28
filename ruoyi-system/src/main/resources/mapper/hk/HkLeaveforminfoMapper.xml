@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hk.mapper.HkLeaveforminfoMapper">
+
+    <resultMap type="HkLeaveforminfo" id="HkLeaveforminfoResult">
+        <result property="id"    column="id"    />
+        <result property="userid"    column="userId"    />
+        <result property="begintime"    column="beginTime"    />
+        <result property="finishtime"    column="finishTime"    />
+        <result property="reason"    column="reason"    />
+        <result property="sataus"    column="sataus"    />
+    </resultMap>
+
+    <sql id="selectHkLeaveforminfoVo">
+        select id, userId, beginTime, finishTime, reason, sataus from hk_leaveforminfo
+    </sql>
+
+    <select id="selectHkLeaveforminfoList" parameterType="HkLeaveforminfo" resultMap="HkLeaveforminfoResult">
+        <include refid="selectHkLeaveforminfoVo"/>
+        <where>
+            <if test="userid != null "> and userId = #{userid}</if>
+            <if test="begintime != null "> and beginTime = #{begintime}</if>
+            <if test="finishtime != null "> and finishTime = #{finishtime}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+            <if test="sataus != null "> and sataus = #{sataus}</if>
+        </where>
+    </select>
+
+    <select id="selectHkLeaveforminfoById" parameterType="Long" resultMap="HkLeaveforminfoResult">
+        <include refid="selectHkLeaveforminfoVo"/>
+        where id = #{id}
+    </select>
+    <select id="getHkLeaveforminfoUserNameById" parameterType="Long" resultMap="HkLeaveforminfoResult">
+        SELECT name from hk_studentinfo inner join hk_leaveforminfo on hk_studentinfo.userId=hk_leaveforminfo.userId
+    </select>
+
+    <insert id="insertHkLeaveforminfo" parameterType="HkLeaveforminfo" useGeneratedKeys="true" keyProperty="id">
+        insert into hk_leaveforminfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">userId,</if>
+            <if test="begintime != null">beginTime,</if>
+            <if test="finishtime != null">finishTime,</if>
+            <if test="reason != null">reason,</if>
+            <if test="sataus != null">sataus,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">#{userid},</if>
+            <if test="begintime != null">#{begintime},</if>
+            <if test="finishtime != null">#{finishtime},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="sataus != null">#{sataus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHkLeaveforminfo" parameterType="HkLeaveforminfo">
+        update hk_leaveforminfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userid != null">userId = #{userid},</if>
+            <if test="begintime != null">beginTime = #{begintime},</if>
+            <if test="finishtime != null">finishTime = #{finishtime},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="sataus != null">sataus = #{sataus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHkLeaveforminfoById" parameterType="Long">
+        delete from hk_leaveforminfo where id = #{id}
+    </delete>
+
+    <delete id="deleteHkLeaveforminfoByIds" parameterType="String">
+        delete from hk_leaveforminfo where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

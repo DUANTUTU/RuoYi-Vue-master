@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hk.mapper.HkTestMapper">
+
+    <resultMap type="HkTest" id="HkTestResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+    </resultMap>
+
+    <sql id="selectHkTestVo">
+        select id, name, age from hk_test
+    </sql>
+
+    <select id="selectHkTestList" parameterType="HkTest" resultMap="HkTestResult">
+        <include refid="selectHkTestVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="age != null "> and age = #{age}</if>
+        </where>
+    </select>
+
+    <select id="selectHkTestById" parameterType="Long" resultMap="HkTestResult">
+        <include refid="selectHkTestVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHkTest" parameterType="HkTest" useGeneratedKeys="true" keyProperty="id">
+        insert into hk_test
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="age != null">age,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="age != null">#{age},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHkTest" parameterType="HkTest">
+        update hk_test
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="age != null">age = #{age},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHkTestById" parameterType="Long">
+        delete from hk_test where id = #{id}
+    </delete>
+
+    <delete id="deleteHkTestByIds" parameterType="String">
+        delete from hk_test where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
