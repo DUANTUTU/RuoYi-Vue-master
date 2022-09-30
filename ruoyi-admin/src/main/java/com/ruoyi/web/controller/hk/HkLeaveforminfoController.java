@@ -37,7 +37,8 @@ public class HkLeaveforminfoController extends BaseController
     /**
      * 查询学生请假列表
      */
-    @PreAuthorize("@ss.hasPermi('hk:leaveforminfo:list')")
+   // @PreAuthorize("@ss.hasPermi('hk:leaveforminfo:list')")
+    @PreAuthorize("@ss.hasRole('user01')")
     @GetMapping("/list")
     public TableDataInfo list(HkLeaveforminfo hkLeaveforminfo)
     {

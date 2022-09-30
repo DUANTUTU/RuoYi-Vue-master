@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.hk.mapper.HkLeaveforminfoMapper">
 
     <resultMap type="HkLeaveforminfo" id="HkLeaveforminfoResult">
@@ -11,14 +11,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="finishtime"    column="finishTime"    />
         <result property="reason"    column="reason"    />
         <result property="sataus"    column="sataus"    />
+        <result property="name" column="name" />
     </resultMap>
-
-    <sql id="selectHkLeaveforminfoVo">
-        select id, userId, beginTime, finishTime, reason, sataus from hk_leaveforminfo
+    <sql id="selectHkLeaveforminfoVo1">
+        select a.id, a.userId, a.beginTime, a.finishTime, a.reason, a.sataus,b.name from hk_leaveforminfo a left join hk_studentinfo b on a.userId = b.userId
     </sql>
+    <sql id="selectHkLeaveforminfoVo">
+        select id, userId, beginTime, finishTime,reason, sataus, from hk_leaveforminfo  </sql>
+
+
 
     <select id="selectHkLeaveforminfoList" parameterType="HkLeaveforminfo" resultMap="HkLeaveforminfoResult">
-        <include refid="selectHkLeaveforminfoVo"/>
+        <include refid="selectHkLeaveforminfoVo1"/>
         <where>
             <if test="userid != null "> and userId = #{userid}</if>
             <if test="begintime != null "> and beginTime = #{begintime}</if>
@@ -29,11 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectHkLeaveforminfoById" parameterType="Long" resultMap="HkLeaveforminfoResult">
-        <include refid="selectHkLeaveforminfoVo"/>
-        where id = #{id}
-    </select>
-    <select id="getHkLeaveforminfoUserNameById" parameterType="Long" resultMap="HkLeaveforminfoResult">
-        SELECT name from hk_studentinfo inner join hk_leaveforminfo on hk_studentinfo.userId=hk_leaveforminfo.userId
+        select id, userId, beginTime, finishTime, reason, sataus from hk_leaveforminfo where id = #{id}
+
     </select>
 
     <insert id="insertHkLeaveforminfo" parameterType="HkLeaveforminfo" useGeneratedKeys="true" keyProperty="id">
@@ -44,14 +45,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="finishtime != null">finishTime,</if>
             <if test="reason != null">reason,</if>
             <if test="sataus != null">sataus,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userid != null">#{userid},</if>
             <if test="begintime != null">#{begintime},</if>
             <if test="finishtime != null">#{finishtime},</if>
             <if test="reason != null">#{reason},</if>
             <if test="sataus != null">#{sataus},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateHkLeaveforminfo" parameterType="HkLeaveforminfo">

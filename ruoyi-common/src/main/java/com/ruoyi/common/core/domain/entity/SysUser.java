@@ -14,7 +14,7 @@ import com.ruoyi.common.xss.Xss;
 
 /**
  * 用户对象 sys_user
- * 
+ *
  * @author ruoyi
  */
 public class SysUser extends BaseEntity
@@ -61,7 +61,9 @@ public class SysUser extends BaseEntity
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
-
+    /** 登录名称 */
+    @Excel(name = "登录名称")
+    private String loginName;
     /** 最后登录IP */
     @Excel(name = "最后登录IP", type = Type.EXPORT)
     private String loginIp;
@@ -271,7 +273,17 @@ public class SysUser extends BaseEntity
     {
         return roleIds;
     }
+//    @NotBlank(message = "登录账号不能为空")
+//    @Size(min = 0, max = 30, message = "登录账号长度不能超过30个字符")
+//    public String getLoginName()
+//    {
+//        return loginName;
+//    }
 
+    public void setLoginName(String loginName)
+    {
+        this.loginName = loginName;
+    }
     public void setRoleIds(Long[] roleIds)
     {
         this.roleIds = roleIds;

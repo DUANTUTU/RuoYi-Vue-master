@@ -1,28 +1,28 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="请假人员Id" prop="userid">
-        <el-input
-          v-model="queryParams.userid"
-          placeholder="请输入请假人员Id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="请假人员Id" prop="userid">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.userid"-->
+<!--          placeholder="请输入请假人员Id"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="请假起始时间" prop="begintime">
         <el-date-picker clearable
-          v-model="queryParams.begintime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择请假起始时间">
+                        v-model="queryParams.begintime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择请假起始时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="请假结束时间" prop="finishtime">
         <el-date-picker clearable
-          v-model="queryParams.finishtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择请假结束时间">
+                        v-model="queryParams.finishtime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择请假结束时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="请假原因" prop="reason">
@@ -32,6 +32,16 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="状态" prop="sataus">
+        <el-select v-model="queryParams.sataus" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.hk_student_leave"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -89,7 +99,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="请假事务id" align="center" prop="id" />
       <el-table-column label="请假人员学号" align="center" prop="userid" />
-      <el-table-column label="请假人员姓名" align="center" prop="username"/>
+      <el-table-column label="请假人员姓名" align="center" prop="name"/>
       <el-table-column label="请假起始时间" align="center" prop="begintime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.begintime, '{y}-{m}-{d}') }}</span>
@@ -101,7 +111,18 @@
         </template>
       </el-table-column>
       <el-table-column label="请假原因" align="center" prop="reason" />
-      <el-table-column label="状态" align="center" prop="sataus" />
+<!--      <el-table-column label="状态" align="center" prop="sataus">-->
+<!--        <template slot-scope="scope">-->
+<!--          <dict-tag :options="dict.type.hk_student_leave" :value="scope.row.sataus" />-->
+<!--        </template>-->
+<!--        -->
+<!--      </el-table-column>-->
+      <el-table-column label="状态" align="center" prop="sataus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.hk_student_leave" :value="scope.row.sataus"/>
+
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -138,22 +159,31 @@
         </el-form-item>
         <el-form-item label="请假起始时间" prop="begintime">
           <el-date-picker clearable
-            v-model="form.begintime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择请假起始时间">
+                          v-model="form.begintime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择请假起始时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="请假结束时间" prop="finishtime">
           <el-date-picker clearable
-            v-model="form.finishtime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择请假结束时间">
+                          v-model="form.finishtime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择请假结束时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="请假原因" prop="reason">
           <el-input v-model="form.reason" placeholder="请输入请假原因" />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="form.sataus">
+            <el-radio
+              v-for="dict in dict.type.hk_student_leave"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,6 +199,7 @@ import { listLeaveforminfo, getLeaveforminfo, delLeaveforminfo, addLeaveforminfo
 
 export default {
   name: "Leaveforminfo",
+  dicts: ['hk_student_leave'],
   data() {
     return {
       // 遮罩层
@@ -213,9 +244,12 @@ export default {
     /** 查询学生请假列表 */
     getList() {
       this.loading = true;
+      console.log("diaoyong")
       listLeaveforminfo(this.queryParams).then(response => {
         this.leaveforminfoList = response.rows;
         this.total = response.total;
+        console.log("diaoyong")
+        console.log(response.rows)
         this.loading = false;
       });
     },

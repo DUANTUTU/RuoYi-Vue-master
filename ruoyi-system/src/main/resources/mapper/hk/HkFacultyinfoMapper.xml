@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hk.mapper.HkFacultyinfoMapper">
+
+    <resultMap type="HkFacultyinfo" id="HkFacultyinfoResult">
+        <result property="id"    column="id"    />
+        <result property="userid"    column="userId"    />
+        <result property="begintime"    column="beginTime"    />
+        <result property="finishtime"    column="finishTime"    />
+        <result property="reason"    column="reason"    />
+        <result property="sataus"    column="sataus"    />
+    </resultMap>
+
+    <sql id="selectHkFacultyinfoVo">
+        select id, userId, beginTime, finishTime, reason, sataus from hk_facultyinfo
+    </sql>
+    <sql id="selectHkFacultyinfoVo1">
+        select a.id, a.userId, a.beginTime, a.finishTime, a.reason, a.sataus,b.name from hk_facultyinfo a left join hk_teacherinfo b on a.userId = b.id
+    </sql>
+    <select id="selectHkFacultyinfoList" parameterType="HkFacultyinfo" resultMap="HkFacultyinfoResult">
+        <include refid="selectHkFacultyinfoVo1"/>
+        <where>
+            <if test="userid != null "> and userId = #{userid}</if>
+            <if test="begintime != null "> and beginTime = #{begintime}</if>
+            <if test="finishtime != null "> and finishTime = #{finishtime}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+            <if test="sataus != null  and sataus != ''"> and sataus = #{sataus}</if>
+        </where>
+    </select>
+
+    <select id="selectHkFacultyinfoById" parameterType="Long" resultMap="HkFacultyinfoResult">
+        <include refid="selectHkFacultyinfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHkFacultyinfo" parameterType="HkFacultyinfo" useGeneratedKeys="true" keyProperty="id">
+        insert into hk_facultyinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">userId,</if>
+            <if test="begintime != null">beginTime,</if>
+            <if test="finishtime != null">finishTime,</if>
+            <if test="reason != null">reason,</if>
+            <if test="sataus != null">sataus,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">#{userid},</if>
+            <if test="begintime != null">#{begintime},</if>
+            <if test="finishtime != null">#{finishtime},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="sataus != null">#{sataus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHkFacultyinfo" parameterType="HkFacultyinfo">
+        update hk_facultyinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userid != null">userId = #{userid},</if>
+            <if test="begintime != null">beginTime = #{begintime},</if>
+            <if test="finishtime != null">finishTime = #{finishtime},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="sataus != null">sataus = #{sataus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHkFacultyinfoById" parameterType="Long">
+        delete from hk_facultyinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteHkFacultyinfoByIds" parameterType="String">
+        delete from hk_facultyinfo where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

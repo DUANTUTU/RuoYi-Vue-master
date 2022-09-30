@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 学生请假对象 hk_leaveforminfo
- * 
+ *
  * @author 段佳帅
  * @date 2022-09-20
  */
@@ -23,11 +23,13 @@ public class HkLeaveforminfo extends BaseEntity
     /** 请假人员Id */
     @Excel(name = "请假人员Id")
     private Long userid;
-
+    @Excel(name = "请假人员姓名")
+    private String name;
     /** 请假起始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "请假起始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date begintime;
+
 
     /** 请假结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -42,59 +44,67 @@ public class HkLeaveforminfo extends BaseEntity
     @Excel(name = "状态")
     private Long sataus;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setUserid(Long userid) 
+    public void setUserid(Long userid)
     {
         this.userid = userid;
     }
 
-    public Long getUserid() 
+    public Long getUserid()
     {
         return userid;
     }
-    public void setBegintime(Date begintime) 
+    public void setBegintime(Date begintime)
     {
         this.begintime = begintime;
     }
 
-    public Date getBegintime() 
+    public Date getBegintime()
     {
         return begintime;
     }
-    public void setFinishtime(Date finishtime) 
+    public void setFinishtime(Date finishtime)
     {
         this.finishtime = finishtime;
     }
 
-    public Date getFinishtime() 
+    public Date getFinishtime()
     {
         return finishtime;
     }
-    public void setReason(String reason) 
+    public void setReason(String reason)
     {
         this.reason = reason;
     }
 
-    public String getReason() 
+    public String getReason()
     {
         return reason;
     }
-    public void setSataus(Long sataus) 
+    public void setSataus(Long sataus)
     {
         this.sataus = sataus;
     }
 
-    public Long getSataus() 
+    public Long getSataus()
     {
         return sataus;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
