@@ -8,41 +8,48 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 学生请假对象 hk_leaveforminfo
+ * 教职工请假信息对象 hk_facultyinfo
  *
  * @author 段佳帅
- * @date 2022-09-20
+ * @date 2022-09-30
  */
-public class HkLeaveforminfo extends BaseEntity
+public class HkFacultyinfo extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 请假事务id */
+    /** 请假事Id */
     private Long id;
 
-    /** 请假人员Id */
-    @Excel(name = "请假人员Id")
+    /** 请假人员ID */
+    @Excel(name = "请假人员ID")
     private Long userid;
-    @Excel(name = "请假人员姓名")
-    private String name;
-    /** 请假起始时间 */
+
+    /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "请假起始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date begintime;
 
-
-    /** 请假结束时间 */
+    /** 结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "请假结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date finishtime;
 
-    /** 请假原因 */
-    @Excel(name = "请假原因")
+    /** 原因 */
+    @Excel(name = "原因")
     private String reason;
-
+    @Excel(name="姓名")
+    private String name;
     /** 状态 */
     @Excel(name = "状态")
-    private Long sataus;
+    private String sataus;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setId(Long id)
     {
@@ -89,22 +96,14 @@ public class HkLeaveforminfo extends BaseEntity
     {
         return reason;
     }
-    public void setSataus(Long sataus)
+    public void setSataus(String sataus)
     {
         this.sataus = sataus;
     }
 
-    public Long getSataus()
+    public String getSataus()
     {
         return sataus;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

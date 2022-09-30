@@ -1,34 +1,34 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="请假人员Id" prop="userid">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userid"-->
-<!--          placeholder="请输入请假人员Id"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <el-form-item label="请假起始时间" prop="begintime">
+      <el-form-item label="请假人员ID" prop="userid">
+        <el-input
+          v-model="queryParams.userid"
+          placeholder="请输入请假人员ID"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="开始时间" prop="begintime">
         <el-date-picker clearable
                         v-model="queryParams.begintime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择请假起始时间">
+                        placeholder="请选择开始时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="请假结束时间" prop="finishtime">
+      <el-form-item label="结束时间" prop="finishtime">
         <el-date-picker clearable
                         v-model="queryParams.finishtime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择请假结束时间">
+                        placeholder="请选择结束时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="请假原因" prop="reason">
+      <el-form-item label="原因" prop="reason">
         <el-input
           v-model="queryParams.reason"
-          placeholder="请输入请假原因"
+          placeholder="请输入原因"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -57,7 +57,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['hk:leaveforminfo:add']"
+          v-hasPermi="['hk:facultyinfo:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -68,7 +68,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['hk:leaveforminfo:edit']"
+          v-hasPermi="['hk:facultyinfo:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,7 +79,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['hk:leaveforminfo:remove']"
+          v-hasPermi="['hk:facultyinfo:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -89,38 +89,31 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['hk:leaveforminfo:export']"
+          v-hasPermi="['hk:facultyinfo:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="leaveforminfoList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="facultyinfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="请假事务id" align="center" prop="id" />
-      <el-table-column label="请假人员学号" align="center" prop="userid" />
-      <el-table-column label="请假人员姓名" align="center" prop="name"/>
-      <el-table-column label="请假起始时间" align="center" prop="begintime" width="180">
+      <el-table-column label="请假事Id" align="center" prop="id" />
+      <el-table-column label="请假人员ID" align="center" prop="userid" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="开始时间" align="center" prop="begintime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.begintime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="请假结束时间" align="center" prop="finishtime" width="180">
+      <el-table-column label="结束时间" align="center" prop="finishtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.finishtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="请假原因" align="center" prop="reason" />
-<!--      <el-table-column label="状态" align="center" prop="sataus">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.hk_student_leave" :value="scope.row.sataus" />-->
-<!--        </template>-->
-<!--        -->
-<!--      </el-table-column>-->
+      <el-table-column label="原因" align="center" prop="reason" />
       <el-table-column label="状态" align="center" prop="sataus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.hk_student_leave" :value="scope.row.sataus"/>
-
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -130,14 +123,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['hk:leaveforminfo:edit']"
+            v-hasPermi="['hk:facultyinfo:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['hk:leaveforminfo:remove']"
+            v-hasPermi="['hk:facultyinfo:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -151,37 +144,37 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改学生请假对话框 -->
+    <!-- 添加或修改教职工请假信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="请假人员Id" prop="userid">
-          <el-input v-model="form.userid" placeholder="请输入请假人员Id" />
+        <el-form-item label="请假人员ID" prop="userid">
+          <el-input v-model="form.userid" placeholder="请输入请假人员ID" />
         </el-form-item>
-        <el-form-item label="请假起始时间" prop="begintime">
+        <el-form-item label="开始时间" prop="begintime">
           <el-date-picker clearable
                           v-model="form.begintime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择请假起始时间">
+                          placeholder="请选择开始时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="请假结束时间" prop="finishtime">
+        <el-form-item label="结束时间" prop="finishtime">
           <el-date-picker clearable
                           v-model="form.finishtime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择请假结束时间">
+                          placeholder="请选择结束时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="请假原因" prop="reason">
-          <el-input v-model="form.reason" placeholder="请输入请假原因" />
+        <el-form-item label="原因" prop="reason">
+          <el-input v-model="form.reason" placeholder="请输入原因" />
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.sataus">
             <el-radio
               v-for="dict in dict.type.hk_student_leave"
               :key="dict.value"
-              :label="parseInt(dict.value)"
+              :label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -195,10 +188,10 @@
 </template>
 
 <script>
-import { listLeaveforminfo, getLeaveforminfo, delLeaveforminfo, addLeaveforminfo, updateLeaveforminfo } from "@/api/hk/leaveforminfo";
+import { listFacultyinfo, getFacultyinfo, delFacultyinfo, addFacultyinfo, updateFacultyinfo } from "@/api/hk/facultyinfo";
 
 export default {
-  name: "Leaveforminfo",
+  name: "Facultyinfo",
   dicts: ['hk_student_leave'],
   data() {
     return {
@@ -214,8 +207,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 学生请假表格数据
-      leaveforminfoList: [],
+      // 教职工请假信息表格数据
+      facultyinfoList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -241,15 +234,12 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询学生请假列表 */
+    /** 查询教职工请假信息列表 */
     getList() {
       this.loading = true;
-      console.log("diaoyong")
-      listLeaveforminfo(this.queryParams).then(response => {
-        this.leaveforminfoList = response.rows;
+      listFacultyinfo(this.queryParams).then(response => {
+        this.facultyinfoList = response.rows;
         this.total = response.total;
-        console.log("diaoyong")
-        console.log(response.rows)
         this.loading = false;
       });
     },
@@ -266,7 +256,7 @@ export default {
         begintime: null,
         finishtime: null,
         reason: null,
-        sataus: 0
+        sataus: "0"
       };
       this.resetForm("form");
     },
@@ -290,16 +280,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加学生请假";
+      this.title = "添加教职工请假信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getLeaveforminfo(id).then(response => {
+      getFacultyinfo(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改学生请假";
+        this.title = "修改教职工请假信息";
       });
     },
     /** 提交按钮 */
@@ -307,13 +297,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateLeaveforminfo(this.form).then(response => {
+            updateFacultyinfo(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addLeaveforminfo(this.form).then(response => {
+            addFacultyinfo(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -325,8 +315,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除学生请假编号为"' + ids + '"的数据项？').then(function() {
-        return delLeaveforminfo(ids);
+      this.$modal.confirm('是否确认删除教职工请假信息编号为"' + ids + '"的数据项？').then(function() {
+        return delFacultyinfo(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -334,9 +324,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('hk/leaveforminfo/export', {
+      this.download('hk/facultyinfo/export', {
         ...this.queryParams
-      }, `leaveforminfo_${new Date().getTime()}.xlsx`)
+      }, `facultyinfo_${new Date().getTime()}.xlsx`)
     }
   }
 };
