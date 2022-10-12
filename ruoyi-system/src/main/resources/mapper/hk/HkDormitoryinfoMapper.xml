@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hk.mapper.HkDormitoryinfoMapper">
+
+    <resultMap type="HkDormitoryinfo" id="HkDormitoryinfoResult">
+        <result property="dormitoryid"    column="dormitoryId"    />
+        <result property="classid"    column="classId"    />
+
+    </resultMap>
+
+    <resultMap id="HkDormitoryinfoHkStudentinfoResult" type="HkDormitoryinfo" extends="HkDormitoryinfoResult">
+        <collection property="hkStudentinfoList" notNullColumn="sub_id" javaType="java.util.List" resultMap="HkStudentinfoResult" />
+    </resultMap>
+
+    <resultMap type="HkStudentinfo" id="HkStudentinfoResult">
+        <result property="id"    column="sub_id"    />
+        <result property="name"    column="sub_name"    />
+        <result property="age"    column="sub_age"    />
+        <result property="sex"    column="sub_sex"    />
+        <result property="grade"    column="sub_grade"    />
+        <result property="classid"    column="sub_classId"    />
+        <result property="tel"    column="sub_tel"    />
+        <result property="collegeid"    column="sub_collegeId"    />
+        <result property="dormitoryid"    column="sub_dormitoryId"    />
+        <result property="status"    column="sub_status"    />
+        <result property="userid"    column="sub_userId"    />
+    </resultMap>
+
+    <sql id="selectHkDormitoryinfoVo">
+        select dormitoryId, classId from hk_dormitoryInfo
+    </sql>
+    <select id="selectHkStudentinfoList" resultType="com.ruoyi.hk.domain.HkStudentinfo">
+        select * from hk_studentinfo
+    </select>
+    <select id="selectHkDormitoryinfoList" parameterType="HkDormitoryinfo" resultMap="HkDormitoryinfoResult">
+        <include refid="selectHkDormitoryinfoVo"/>
+        <where>
+            <if test="classid != null "> and classId = #{classid}</if>
+        </where>
+    </select>
+
+    <select id="selectHkDormitoryinfoByDormitoryid" parameterType="Long" resultMap="HkDormitoryinfoHkStudentinfoResult">
+        select a.dormitoryId, a.classId,
+ b.id as sub_id, b.name as sub_name, b.age as sub_age, b.sex as sub_sex, b.grade as sub_grade, b.classId as sub_classId, b.tel as sub_tel, b.collegeId as sub_collegeId, b.dormitoryId as sub_dormitoryId, b.status as sub_status, b.userId as sub_userId
+        from hk_dormitoryInfo a
+        left join hk_studentinfo b on b.dormitoryId = a.dormitoryId
+        where a.dormitoryId = #{dormitoryid}
+    </select>
+
+
+    <insert id="insertHkDormitoryinfo" parameterType="HkDormitoryinfo">
+        insert into hk_dormitoryInfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dormitoryid != null">dormitoryId,</if>
+            <if test="classid != null">classId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dormitoryid != null">#{dormitoryid},</if>
+            <if test="classid != null">#{classid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHkDormitoryinfo" parameterType="HkDormitoryinfo">
+        update hk_dormitoryInfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classid != null">classId = #{classid},</if>
+        </trim>
+        where dormitoryId = #{dormitoryid}
+    </update>
+
+    <delete id="deleteHkDormitoryinfoByDormitoryid" parameterType="Long">
+        delete from hk_dormitoryInfo where dormitoryId = #{dormitoryid}
+    </delete>
+
+    <delete id="deleteHkDormitoryinfoByDormitoryids" parameterType="String">
+        delete from hk_dormitoryInfo where dormitoryId in
+        <foreach item="dormitoryid" collection="array" open="(" separator="," close=")">
+            #{dormitoryid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteHkStudentinfoByDormitoryIds" parameterType="String">
+        delete from hk_studentinfo where dormitoryId in
+        <foreach item="dormitoryId" collection="array" open="(" separator="," close=")">
+            #{dormitoryId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteHkStudentinfoByDormitoryId" parameterType="Long">
+        delete from hk_studentinfo where dormitoryId = #{dormitoryId}
+    </delete>
+
+    <insert id="batchHkStudentinfo">
+        insert into hk_studentinfo( id, name, age, sex, grade, classId, tel, collegeId, dormitoryId, status, userId) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.name}, #{item.age}, #{item.sex}, #{item.grade}, #{item.classid}, #{item.tel}, #{item.collegeid}, #{item.dormitoryid}, #{item.status}, #{item.userid})
+        </foreach>
+    </insert>
+</mapper>

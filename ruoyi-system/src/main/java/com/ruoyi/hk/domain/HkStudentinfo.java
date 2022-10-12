@@ -53,6 +53,7 @@ public class HkStudentinfo extends BaseEntity
     /** 学生所处于状态  1正常 0异常 */
     @Excel(name = "学生所处于状态  1正常 0异常")
     private String status;
+    /** 宿舍id */
 
     /** 学号 */
     @Excel(name = "学号")
@@ -174,4 +175,6 @@ public class HkStudentinfo extends BaseEntity
                 .append("userid", getUserid())
                 .toString();
     }
+
+
 }

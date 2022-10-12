@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.hk;
 
 import com.ruoyi.common.annotation.Anonymous;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Anonymous
 public class homePageController {
+
    @GetMapping("/homePage")
     public String homePage()
    {
-       return "index";
+       return "";
    }
 
 }
